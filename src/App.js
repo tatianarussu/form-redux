@@ -1,61 +1,92 @@
-import React from 'react';
-// import logo from './logo.svg';
+import React, {Component} from 'react';
 import './App.css';
-import { createStore } from 'redux'
+
+import { bindActionCreators } from 'redux'
+import { connect } from 'react-redux'
+import { updateUser } from './actions/user-actions'
+
+class App extends Component {
+  constructor(props) {
+    super(props)
+
+    this.onUpdateUser = this.onUpdateUser.bind(this)
+  }
+
+  onUpdateUser(event) {
+    this.props.onUpdateUser(event.target.value)
+  }
+
+  render() {
+    return (
+      <div className="app">
+        <p className="title">Register with us</p>
+        <div className="input-group mb-3">
+          <input type="text" className="form-control" placeholder="First Name" aria-label="firstname"
+                 aria-describedby="basic-addon1" onChange={this.onUpdateUser}/>
+        </div>
+        <div className="input-group mb-3">
+          <input type="text" className="form-control" placeholder="Last Name" aria-label="lastname"
+                 aria-describedby="basic-addon1"/>
+        </div>
+        <div className="input-group mb-3">
+          <select className="custom-select" id="inputGroupSelect01">
+            <option selected>Country you are living in now</option>
+            <option value="1">One</option>
+            <option value="2">Two</option>
+          </select>
+        </div>
+        <div className="input-group mb-3">
+          <input type="text" className="form-control" placeholder="Email Address" aria-label="Username"
+                 aria-describedby="basic-addon1"/>
+        </div>
+        <div className="input-group mb-3">
+          <input type="password" className="form-control" placeholder="Password - minimum 8 characters"
+                 aria-label="Username" aria-describedby="basic-addon1"/>
+        </div>
+        <div className="input-group mb-3">
+          <input type="password" className="form-control" placeholder="Please confirm password" aria-label="Username"
+                 aria-describedby="basic-addon1"/>
+        </div>
+        <p className="footer">Terms and Conditions</p>
+        <div className="form-check">
+          <input className="form-check-input" type="radio" name="exampleRadios" id="exampleRadios1" value="option1"/>
+          <label className="form-check-label" htmlFor="exampleRadios1"> I agree with terms and conditions</label>
+        </div>
+        <div className="divButton">
+          <button type="button" className="button">Register Free</button>
+        </div>
 
 
-function counter(state = 0, action) {
-  switch (action.type) {
-    case 'INCREMENT':
-      return state + 1
-    case 'DECREMENT':
-      return state - 1
-    default:
-      return state
+        {/*<input onChange={this.onUpdateUser}/>*/}
+        {/*{this.props.user}*/}
+      </div>
+    );
   }
 }
 
-// Create a Redux store holding the state of your app.
-// Its API is { subscribe, dispatch, getState }.
-let store = createStore(counter)
-
-// You can use subscribe() to update the UI in response to state changes.
-// Normally you'd use a view binding library (e.g. React Redux) rather than subscribe() directly.
-// However it can also be handy to persist the current state in the localStorage.
-
-store.subscribe(() => console.log(store.getState()))
-
-// The only way to mutate the internal state is to dispatch an action.
-// The actions can be serialized, logged or stored and later replayed.
-store.dispatch({ type: 'INCREMENT' })
-// 1
-store.dispatch({ type: 'INCREMENT' })
-// 2
-store.dispatch({ type: 'DECREMENT' })
-// 1
-
-
-
-function App() {
-  return (
-    <div className="App">
-      {/*<header className="App-header">*/}
-        {/*<img src={logo} className="App-logo" alt="logo" />*/}
-        {/*<p>*/}
-          {/*Edit <code>src/App.js</code> and save to reload.*/}
-        {/*</p>*/}
-        {/*<a*/}
-          {/*className="App-link"*/}
-          {/*href="https://reactjs.org"*/}
-          {/*target="_blank"*/}
-          {/*rel="noopener noreferrer"*/}
-        {/*>*/}
-          {/*Learn React*/}
-        {/*</a>*/}
-      {/*</header>*/}
-      <p>testtestetets</p>
-    </div>
-  );
+const mapStateToProps = (state, props) => {
+  console.log('state', state)
+  return {
+    products: state.products,
+    user: state.user,
+    userPlusProps: `${state.user} ${props.aRandomProps}`
+  }
 }
 
-export default App;
+const mapActionsToProps = (dispatch, props) => {
+  console.log('props', props)
+
+  return bindActionCreators({
+    onUpdateUser: updateUser
+  }, dispatch)
+}
+
+// const mergeProps = (propsFromState, propsFromDispatch, ownProps) => {
+//   console.log("propsFromState",propsFromState  )
+//   console.log("propsFromDispatch",propsFromDispatch)
+//   console.log("ownProps",ownProps)
+//   return {}
+// }
+
+
+export default connect(mapStateToProps, mapActionsToProps)(App);
