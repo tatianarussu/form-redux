@@ -5,6 +5,20 @@ import { connect } from 'react-redux'
 import { onUpdateUser } from './actions/user-actions'
 
 class App extends Component {
+  constructor(props) {
+    super(props)
+
+    this.state = {
+      isChecked: false
+    }
+  }
+
+  handleIsChecked = () => {
+    this.setState({
+      isChecked: true
+    })
+  }
+
 
   handleChangeFirstName = (e) => {
     const { name, value } = e.target
@@ -26,6 +40,7 @@ class App extends Component {
   }
 
   render() {
+    const { isChecked } = this.state
     return (
       <div className="app">
         <p className="title">Register with us</p>
@@ -58,11 +73,11 @@ class App extends Component {
         </div>
         <p className="footer">Terms and Conditions</p>
         <div className="form-check">
-          <input className="form-check-input" type="radio" name="exampleRadios" id="exampleRadios1" value="option1"/>
+          <input className="form-check-input" type="radio" name="exampleRadios" id="exampleRadios1" value="option1" onChange={this.handleIsChecked} />
           <label className="form-check-label" htmlFor="exampleRadios1"> I agree with terms and conditions</label>
         </div>
         <div className="divButton">
-          <button type="button" className="button" onClick={this.handleSubmit}>Register Free</button>
+          <button type="button" className="button" disabled={isChecked === false} onClick={this.handleSubmit}> Register Free</button>
         </div>
 
       </div>
