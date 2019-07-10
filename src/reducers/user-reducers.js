@@ -5,7 +5,8 @@ const initState = {
   lastName: '',
   email: '',
   password: '',
-  confirmPassword: ''
+  confirmPassword: '',
+  country:''
 }
 
 export default function userReducer( state = initState, action){

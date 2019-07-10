@@ -5,6 +5,34 @@ import { connect } from 'react-redux'
 import { onUpdateUser } from './actions/user-actions'
 
 class App extends Component {
+ constructor(props) {
+   super(props)
+
+   this.state = {
+     countries: []
+   }
+ }
+  
+  componentDidMount(){
+    fetch('https://restcountries.eu/rest/v2/all')
+  .then(res => res.json())
+      .then(
+        (result) => {
+          this.setState({
+            countries: result.map(country => country.name)
+          });
+        },
+        // Note: it's important to handle errors here
+        // instead of a catch() block so that we don't swallow
+        // exceptions from actual bugs in components.
+        (error) => {
+          this.setState({
+            isLoaded: true,
+            error
+          });
+        }
+      )
+  }
 
   handleChangeFirstName = (e) => {
     const { name, value } = e.target
@@ -20,12 +48,23 @@ class App extends Component {
       email: this.props.email,
       password: this.props.password,
       confirmPassword: this.props.confirmPassword,
+      country: this.props.country
     }
     localStorage.setItem('user', JSON.stringify(user));
     alert("Confirm register")
   }
 
+ getCountries =  async () => {
+  const response = await fetch('https://restcountries.eu/rest/v2/all')
+  const myJson = await response.json()
+  const country = myJson.map(country => country.name)
+  return country
+ }
+
+
+
   render() {
+    const { countries } = this.state
     return (
       <div className="app">
         <p className="title">Register with us</p>
@@ -38,10 +77,13 @@ class App extends Component {
                  aria-describedby="basic-addon1"  onChange={this.handleChangeFirstName} />
         </div>
         <div className="input-group mb-3">
-          <select className="custom-select" id="inputGroupSelect01">
+          <select className="custom-select" id="inputGroupSelect01" name="country" onChange={this.handleChangeFirstName}>
             <option >Country you are living in now</option>
-            <option value="1">One</option>
-            <option value="2">Two</option>
+            {
+              countries.map((cont, index) =>{
+                return <option key={index}> {cont} </option>
+              })
+            }
           </select>
         </div>
         <div className="input-group mb-3">
@@ -68,7 +110,7 @@ class App extends Component {
       </div>
     );
   }
-}
+} 
 
 const mapStateToProps = (state) => {
   return {
@@ -76,7 +118,8 @@ const mapStateToProps = (state) => {
     lastName: state.lastName,
     email: state.email,
     password: state.password,
-    confirmPassword: state.confirmPassword
+    confirmPassword: state.confirmPassword,
+    country: state.country
   }
 }
 
