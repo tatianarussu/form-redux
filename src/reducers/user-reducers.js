@@ -1,10 +1,23 @@
 import { UPDATE_USER } from '../actions/user-actions'
 
-export default function userReducer( state = [], {type, payload }){
-  switch (type) {
+const initState = {
+  firstName : '',
+  lastName: '',
+  email: '',
+  password: '',
+  confirmPassword: ''
+}
+
+export default function userReducer( state = initState, action){
+  switch (action.type) {
     case UPDATE_USER:
-      return payload.user
+      return {
+        ...state,
+       [action.name] : action.value,
+      }
     default:
       return state
   }
 }
+
+

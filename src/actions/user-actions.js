@@ -1,10 +1,13 @@
-export const UPDATE_USER = 'user:updateUser'
+export const UPDATE_USER = 'user'
 
-export function updateUser(newUser){
+export function onUpdateUser( name, value){
   return {
     type: UPDATE_USER,
-    payload: {
-      user: newUser
-    }
+    name,
+    value
   }
 }
+
+
+
+
